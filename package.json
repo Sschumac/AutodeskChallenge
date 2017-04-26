@@ -15,6 +15,7 @@
     "express": "^4.15.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-router": "^4.1.1",
     "react-svg": "^2.1.19",
     "style-loader": "^0.16.1",
     "webpack": "^2.4.1"
