@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {Router, Route, Link, hashHistory} from 'react-router'; 
+import { HashRouter as Router, Route, Link } from 'react-router-dom'
 
-import Main from './Main.jsx';
+import Main from './Main.jsx'
+
 
 render(
-  <Router history = {hashHistory}>
-    <Route path='/' component={Main}/>
-    <Route path='/:roomid' component={Main}/>
+  <Router>
+    <div>
+      <Route path="/:id" component={Main}/>
+      <Route exact path="/" component={Main}/>
+    </div>
   </Router>
   , document.getElementById('app'));
