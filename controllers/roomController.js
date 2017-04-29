@@ -11,10 +11,19 @@ module.exports.createNewRoom = function(req, res){
   const roomTemplate = {
     roomID:roomID,
     sequence:defaultSequence,
-    dbn:defaultDBN
+    dbn:defaultDBN,
+    isProcessed:false
   }
   roomStore[roomID] = roomTemplate;
-  res.send(roomID);
+  console.log(roomTemplate);
+  vienna.generatePlot(roomID, roomTemplate.sequence, roomTemplate.dbn, ()=>{
+    res.send(roomID);
+  })
 
+}
+
+module.exports.getRoomStatus = function(req,res){
+  console.log(req.query.roomID);
+  res.send(roomStore[req.query.roomID]);
 }
 

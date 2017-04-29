@@ -11,6 +11,9 @@ class Main extends Component {
       sequence:"",
       dbn:""
     };
+
+    this.setRoomData = this.setRoomData.bind(this);
+    this.setUpInteractivity = this.setUpInteractivity.bind(this);
   }
 
   componentDidMount() {
@@ -18,15 +21,36 @@ class Main extends Component {
       $.get('api/newSession', (roomID)=>{
         window.location.replace(window.location.href + roomID);
       })
+    }else{
+      console.log('ellsse');
+      this.roomID = this.props.match.url.substring(1);
+      const roomID = this.roomID;
+      let setRoomData = this.setRoomData
+      $.get('api/roomStatus',{roomID:roomID}, (data)=>{
+        setRoomData(data);
+      });
     }
+    
+  }
+
+  setRoomData(data){
+    this.setState({roomData:data},()=>{
+      this.setUpInteractivity();
+    })
+  }
+
+  setUpInteractivity(){
+    const svgElement = document.getElementById('svgContainer').contentDocument;
   }
 
   render() {
+
+    let svgObject = this.state.roomData?<object id="svgContainer" data={'img/' + this.state.roomData.roomID + '.svg'}></object>:"";
     return (
       <div className={styles.base}>
-        <p>hello</p>
         <input value={this.state.sequence}></input>
         <input value={this.state.dbn}></input>
+        {svgObject}
       </div>
     );
   }
