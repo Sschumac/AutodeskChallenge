@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './Main.css';
 import $ from 'jquery';
+import d3 from 'd3';
+import NodeGraph from './svgController.js'
+
+console.log(NodeGraph);
 
 class Main extends Component {
 
@@ -19,6 +23,7 @@ class Main extends Component {
   componentDidMount() {
     if (this.props.match.path === "/"){
       $.get('api/newSession', (roomID)=>{
+        console.log('got it');
         window.location.replace(window.location.href + roomID);
       })
     }else{
@@ -32,7 +37,6 @@ class Main extends Component {
     }
     
   }
-
   setRoomData(data){
     this.setState({roomData:data},()=>{
       this.setUpInteractivity();
@@ -40,17 +44,15 @@ class Main extends Component {
   }
 
   setUpInteractivity(){
-    const svgElement = document.getElementById('svgContainer').contentDocument;
+    const graph = new NodeGraph('#visuContainer',this.state.roomData.plotData, this.state.roomData.dbn);
   }
 
   render() {
-
-    let svgObject = this.state.roomData?<object id="svgContainer" data={'img/' + this.state.roomData.roomID + '.svg'}></object>:"";
     return (
       <div className={styles.base}>
+        <svg id='visuContainer' height='500' width='500'></svg>
         <input value={this.state.sequence}></input>
         <input value={this.state.dbn}></input>
-        {svgObject}
       </div>
     );
   }

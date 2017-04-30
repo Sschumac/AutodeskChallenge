@@ -2,17 +2,13 @@ const spawn = require('child_process').spawn;
 const path = require('path');
 
 module.exports.generatePlot = (fileName, sequence, dbn, callback)=>{
-  const process = spawn('python', ['/Users/sschumac/Documents/Autodesk/util/RNAplot.py', sequence, dbn, fileName], {cwd:'/Users/sschumac/Documents/Autodesk/app/build/img/'})
-
+  const process = spawn('python', ['/Users/sschumac/Documents/Autodesk/util/RNAplot.py', sequence, dbn, fileName])
+  const dataBuffer = [];
   process.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+    dataBuffer.push(data);
   });
 
-  process.stderr.on('data', (data) => {
-    console.log(`stderr: ${data}`);
-  });
-
-  process.on('close',(exitCode)=>{
-    callback();
+  process.on('close',()=>{
+    callback(dataBuffer.join(''));
   })
 }

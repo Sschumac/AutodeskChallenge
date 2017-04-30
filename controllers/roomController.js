@@ -14,16 +14,15 @@ module.exports.createNewRoom = function(req, res){
     dbn:defaultDBN,
     isProcessed:false
   }
-  roomStore[roomID] = roomTemplate;
-  console.log(roomTemplate);
-  vienna.generatePlot(roomID, roomTemplate.sequence, roomTemplate.dbn, ()=>{
+  vienna.generatePlot(roomID, roomTemplate.sequence, roomTemplate.dbn, (data)=>{
+    roomTemplate.plotData = JSON.parse(data).data;
+    roomStore[roomID] = roomTemplate;
     res.send(roomID);
   })
 
 }
 
 module.exports.getRoomStatus = function(req,res){
-  console.log(req.query.roomID);
   res.send(roomStore[req.query.roomID]);
 }
 
