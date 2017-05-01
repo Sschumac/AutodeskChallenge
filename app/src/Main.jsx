@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import styles from './Main.css';
 import $ from 'jquery';
 import d3 from 'd3';
-import NodeGraph from './svgController.js'
+import NodeGraph from './svgController.js';
+import GraphKey from './GraphKey.jsx';
 
-console.log(NodeGraph);
 
 class Main extends Component {
 
@@ -52,6 +52,7 @@ class Main extends Component {
   setUpInteractivity(){
     $('#graphContainer').empty();
     this.graph = new NodeGraph('#graphContainer',this.state.roomData.plotData, this.saveGraphState.bind(this));
+    this.setState({graphRendered:true});
   }
 
   saveGraphState(data){
@@ -70,7 +71,6 @@ class Main extends Component {
 
     const seq = this.state.sequence;
     const dbn = this.state.dbn;
-    console.log(dbn,seq);
 
     if (seq.length !== dbn.length){
       this.setState({error:'Dot Bracket Notation and Sequence must be same length.'})
@@ -134,6 +134,7 @@ class Main extends Component {
           </div>
           <input id='dbnInput' className='inputBar' value={this.state.roomData?this.state.dbn:""} onChange={this.onDbnChange}></input>
         </div>
+        {this.state.graphRendered?<GraphKey onColorChange={this.graph.changeNodeFill}/>:""}
       </div>
     );
   }
