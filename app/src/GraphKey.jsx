@@ -7,7 +7,6 @@ class GraphKey extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.onColorChange);
     $('.base_a').spectrum({
       color: "#4357AD",
       move:(color)=>{this.props.onColorChange('base_a',color.toHexString())}

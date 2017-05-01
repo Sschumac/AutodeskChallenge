@@ -121,7 +121,7 @@ class Main extends Component {
     return (
       <div className={styles.base}>
         <div id='graphContainer'></div>
-        <p>{this.state.error}</p>
+        <p id='errorText'>{this.state.error}</p>
         <div className='inputContainer' id='seqContainer'>
           <div id='seqLable' className='inputLable'>
             <p id='seqLableText' className='inputLableText'>Sequence</p>

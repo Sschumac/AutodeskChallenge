@@ -49,6 +49,13 @@ p{
 
 }
 
+#errorText{
+  position:absolute;
+  color:white;
+  bottom:75px;
+  font-family:helvetica;
+}
+
 .inputLableText{
   margin-top:6px;
 }
