@@ -1,8 +1,8 @@
 # Autodesk Technical Challenge
-This was very interesting and skill-diverse build, thanks for putting the "challenge" back in technical challenge. I hope you enjoy using it as much as I enjoyed writing it.
+This was very interesting and skill-diverse build, thanks for putting the "challenge" back in technical challenge. 4115 lines of code, and 23 cups of coffee later, I hope you enjoy using it as much as I enjoyed writing it.
 
-
--Sawyer Schumacher
+Thank you for your continued consideration,
+- Sawyer Schumacher
 
 ## Technology Stack
 ### Front-End
