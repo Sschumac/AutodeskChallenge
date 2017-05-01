@@ -122,8 +122,18 @@ class Main extends Component {
       <div className={styles.base}>
         <div id='graphContainer'></div>
         <p>{this.state.error}</p>
-        <input value={this.state.roomData?this.state.sequence:""} onChange={this.onSeqChange}></input>
-        <input value={this.state.roomData?this.state.dbn:""} onChange={this.onDbnChange}></input>
+        <div className='inputContainer' id='seqContainer'>
+          <div id='seqLable' className='inputLable'>
+            <p id='seqLableText' className='inputLableText'>Sequence</p>
+          </div>
+          <input id='seqInput' className='inputBar' value={this.state.roomData?this.state.sequence:""} onChange={this.onSeqChange}></input>
+        </div>
+        <div className='inputContainer' id='dbnContainer'>
+          <div id='dbnLable' className='inputLable'>
+            <p id='dbnLableText' className='inputLableText'>DBN</p>
+          </div>
+          <input id='dbnInput' className='inputBar' value={this.state.roomData?this.state.dbn:""} onChange={this.onDbnChange}></input>
+        </div>
       </div>
     );
   }
