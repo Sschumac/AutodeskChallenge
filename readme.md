@@ -14,7 +14,7 @@ This was very interesting and skill-diverse build, thanks for putting the "chall
  * ViennaRNA
 
 ## Sharing & Persistence
-Every new request to the home route creates a new Room that is its own sepperate graphing instance and unique URL. Any changes made by dragging and dropping nodes on the graph or changing sequence or structure will be persistant through refreshes. Links can be shared and any changes made will remain persistant. This would be an excellent place to fit in a Redis store.
+Every new request to the home route creates a new Room that has its own sepperate graphing instance and unique URL. Any changes made by dragging and dropping nodes on the graph or changing sequence or structure will be persistant through refreshes. Links can be shared and any changes made will remain persistant. This would be an excellent place to fit in a Redis store.
 
 ## UI & UX
 I wanted the UX to be as instant and input minimal as possible, any time a valid Sequence/Structure pair are available in the input, a new graph is constructed server side as fast as possible. No enter buttons or save buttons. All interactions with the server are in the background and automatic. For color selection, I utilized [spectrum](https://bgrins.github.io/spectrum/), an extremely lightweight color picker thats used in the Chrome and Firefix dev tools. 
