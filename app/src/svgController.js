@@ -18,6 +18,19 @@ class NodeGraph{
       .attr('width', this.pageWidth);
 
     this.svg = svg
+
+    const offset = (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2);
+
+    const lines = svg.selectAll('.lines').data(linksArray);
+    const newLines = lines.enter();
+
+    newLines.append('line')
+      .classed('line', true)
+      .attr('x1', (data)=>(nodeData[data.start].X*this.scale + offset))
+      .attr('y1', (data)=>(nodeData[data.start].Y*this.scale))
+      .attr('x2', (data)=>(nodeData[data.end].X*this.scale + offset))
+      .attr('y2', (data)=>(nodeData[data.end].Y*this.scale))
+
     
     const nodes = svg.selectAll('.node').data(nodeData);
     const newNodes = nodes.enter();
@@ -29,25 +42,76 @@ class NodeGraph{
       .classed('base_t', (data)=>(data.base=='T'))
       .classed('base_g', (data)=>(data.base=='G'))
       .classed('base_n', (data)=>(data.base=='N'))
-      .attr('cx',(data)=>(data.X*this.scale + (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2)))
+      .classed('start', (data, i)=>(i==0))
+      .classed('end', (data, i)=>(i == nodeData.length - 1))
+      .attr('index',(d, index)=>{index})
+      .attr('cx',(data)=>(data.X*this.scale + offset))
       .attr('cy',(data)=>(data.Y*this.scale))
-      .attr('r', 7);
+      .attr('r', 7)
+      .attr('id',(data, i)=>('node_'+i))
+      .call(d3.drag()
+        .on("start", this.dragstarted)
+        .on("drag", this.dragged)
+        .on("end", this.draggedEnded));
 
-    const lines = svg.selectAll('.lines').data(linksArray);
-    const newLines = lines.enter();
+    const lable3 = svg.select('.lable3').datum(nodeData[0]).enter();
+    const lable5 = svg.select('.lable5').datum(nodeData[nodeData.length - 1]).enter();
 
-    newLines.append('line')
-      .classed('.line', true)
-      .attr('x1', (data)=>(nodeData[data.start].X*this.scale + (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2)))
-      .attr('y1', (data)=>(nodeData[data.start].Y*this.scale))
-      .attr('x2', (data)=>(nodeData[data.end].X*this.scale + (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2)))
-      .attr('y2', (data)=>(nodeData[data.end].Y*this.scale));
+    svg.append('text')
+      .datum(nodeData[0])
+      .classed('lable3',true)
+      .text('3')
+      .attr('x', (d)=>(d.X*this.scale + offset - 4))
+      .attr('y', (d)=>(d.Y*this.scale + 5))
+      .style('pointer-events','none')
 
+    svg.append('text')
+      .datum(nodeData[nodeData.length - 1])
+      .classed('lable5',true)
+      .text('5')
+      .attr('x', (d)=>(d.X*this.scale + offset - 4))
+      .attr('y', (d)=>(d.Y*this.scale + 5))
+      .style('pointer-events','none')
+
+
+   
     this.changeNodeFill = this.changeNodeFill.bind(this);
     this.setNodeDefaultFills = this.setNodeDefaultFills.bind(this);
+    this.changeConnectorStroke = this.changeConnectorStroke.bind(this);
 
     this.setNodeDefaultFills();
+    this.changeConnectorStroke('white',2);
   }
+
+  dragStarted(d){}
+
+  dragged(d){
+    const nodeVal = parseInt(d3.select(this).attr('id').substring(5));
+    d3.select(this).attr("cx", d.X = d3.event.x).attr("cy", d.Y = d3.event.y);
+    d3.selectAll('.line')
+      .filter((data)=>(data.start===nodeVal))
+      .attr('x1',d3.event.x)
+      .attr('y1',d3.event.y)
+    d3.selectAll('.line')
+      .filter((data)=>(data.end===nodeVal))
+      .attr('x2',d3.event.x)
+      .attr('y2',d3.event.y)
+
+    if (d3.select(this).classed('start')){
+      d3.select('.lable3')
+        .attr('x',d3.event.x-4)
+        .attr('y', d3.event.y+5)
+    }
+
+    if (d3.select(this).classed('end')){
+      d3.select('.lable5')
+        .attr('x',d3.event.x-4)
+        .attr('y', d3.event.y+5)
+    }
+  }
+  draggedEnded(d){
+  }
+
 
   setNodeDefaultFills(){
     this.changeNodeFill('base_a', '#4357AD');
@@ -60,6 +124,16 @@ class NodeGraph{
   changeNodeFill(nodeClass, fill){
     this.svg.selectAll('.' + nodeClass)
       .style('fill', fill);
+  }
+
+  changeConnectorStroke(color, width){
+    const lines = this.svg.selectAll('.line');
+    if (color){
+      lines.attr('stroke',color);
+    }
+    if(width){
+      lines.attr('stroke-width',width);
+    }
   }
 
   generateLinksArray(nodeData){
