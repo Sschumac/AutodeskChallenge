@@ -23,7 +23,7 @@ I wanted the UX to be as instant and input minimal as possible, any time a valid
 The graph layout algorithims proved to be the most challenging aspect of the build. My first step was an attemp at the geometry based algorthims described by [Generating non-overlapping displays of nucleic acid secondary structure](https://academic.oup.com/nar/article/12/1Part1/75/2889741/Generating-non-overlapping-displays-of-nucleic) and [A partition function algorithm for nucleic acid secondary structure including pseudoknots](http://onlinelibrary.wiley.com/doi/10.1002/jcc.10296/abstract).
 Progress was made, and circular type secondary structure graphs could be made in O(n^3), I eventually switched to an off board solution in the interest of time.
 
-I decided to outsource the problem to [ViennaRNA](https://www.tbi.univie.ac.at/RNA/) running on the server, Vienna is an excellent general purpose RNA focused software suite, which I interfaced with to the server via the suites Python bindings and a node.js process manager.
+I decided to outsource the problem to [ViennaRNA](https://www.tbi.univie.ac.at/RNA/) running on the server, Vienna is an excellent general purpose RNA focused software suite, which I interfaced with the server via the suites Python bindings and a node.js process manager.
 ViennaRNA's plotting functions output normalized XY plotting data, and a connection table for interior bonds, which was used as the data for binding in d3. 
 
 In the future, my servers implementation of Vienna could be expanded to include other Vienna APIs such as Minimum Free Energy calculation and Secondary Structure Prediction.
