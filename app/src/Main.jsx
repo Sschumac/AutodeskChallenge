@@ -17,6 +17,7 @@ class Main extends Component {
     };
 
     this.setRoomData = this.setRoomData.bind(this);
+    this.getRoomData = this.getRoomData.bind(this);
     this.setUpInteractivity = this.setUpInteractivity.bind(this);
     this.onDbnChange = this.onDbnChange.bind(this);
     this.onSeqChange = this.onSeqChange.bind(this);
@@ -28,13 +29,18 @@ class Main extends Component {
         window.location.replace(window.location.href + roomID);
       })
     }else{
-      this.roomID = this.props.match.url.substring(1);
-      const roomID = this.roomID;
-      let setRoomData = this.setRoomData
-      $.get('api/roomStatus',{roomID:roomID}, (data)=>{
-        setRoomData(data);
-      });
+      this.getRoomData()
     }
+
+  }
+  getRoomData(){
+    this.roomID = this.props.match.url.substring(1);
+    const roomID = this.roomID;
+    let setRoomData = this.setRoomData
+
+    $.get('api/roomStatus',{roomID:roomID}, (data)=>{
+      setRoomData(data);
+    });
 
   }
   setRoomData(data){
@@ -44,6 +50,7 @@ class Main extends Component {
   }
 
   setUpInteractivity(){
+    $('#graphContainer').empty();
     this.graph = new NodeGraph('#graphContainer',this.state.roomData.plotData, this.saveGraphState.bind(this));
   }
 
@@ -104,7 +111,10 @@ class Main extends Component {
   }
 
   updateGraph(){
-    console.log('updating');
+    const getRoomData = this.getRoomData;
+    $.post('api/changeGraph',{roomID:this.roomID, sequence:this.state.sequence, dbn:this.state.dbn},()=>{
+      getRoomData();
+    });
   }
 
   render() {

@@ -16,13 +16,24 @@ module.exports.createNewRoom = function(req, res){
   }
   vienna.generatePlot(roomID, roomTemplate.sequence, roomTemplate.dbn, (data)=>{
     const parsedData = JSON.parse(data);
-    console.log(parsedData);
     roomTemplate.plotData = parsedData.graphPoints;
     roomTemplate.ptable = parsedData.ptable;
     roomStore[roomID] = roomTemplate;
     res.send(roomID);
   })
 
+}
+
+module.exports.changeGraph = function(req, res){
+  const room = roomStore[req.body.roomID];
+  vienna.generatePlot(req.body.roomID, req.body.sequence, req.body.dbn, (data)=>{
+    const parsedData = JSON.parse(data);
+    room.plotData = parsedData.graphPoints;
+    room.ptable = parsedData.ptable;
+    room.sequence = req.body.sequence;
+    room.dbn = req.body.dbn;
+    res.sendStatus(200);
+  })
 }
 
 module.exports.updateRoomData = function(req, res){
