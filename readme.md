@@ -28,3 +28,15 @@ I decided to outsource the problem to [ViennaRNA](https://www.tbi.univie.ac.at/R
 ViennaRNA's plotting functions output normalized XY plotting data, and a connection table for interior bonds, which was used as the data for binding in d3. 
 
 In the future, my servers implementation of Vienna could be expanded to include other Vienna APIs such as Minimum Free Energy calculation and Secondary Structure Prediction.
+
+## Installation
+Dependencies
+* ViennaRNA + Python Bindings
+* Python 2.7
+* Webpack
+#### Build and Run
+
+````
+npm install && webpack && node index.js
+````
+Server will run on port 3030 if no $PORT variable is set.
