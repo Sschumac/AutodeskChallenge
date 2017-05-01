@@ -25,6 +25,11 @@ module.exports.createNewRoom = function(req, res){
 
 }
 
+module.exports.updateRoomData = function(req, res){
+  roomStore[req.body.roomID].plotData = req.body.plotData;
+  res.sendStatus(200);
+}
+
 module.exports.getRoomStatus = function(req,res){
   res.send(roomStore[req.query.roomID]);
 }

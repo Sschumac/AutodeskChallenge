@@ -1,13 +1,17 @@
 import * as d3 from "d3";
 
+let scale;
+let offset;
+
 class NodeGraph{
-  constructor(selector, nodeData, dbn){
-    this.selector = selector
-    this.nodeData = nodeData
-    this.dbn = dbn
-    this.pageHeight = window.innerHeight
-    this.pageWidth = window.innerWidth
-    this.scale = 1.5;
+  constructor(selector, nodeData, saveDataCallback){
+    this.selector = selector;
+    this.nodeData = nodeData;
+    this.pageHeight = window.innerHeight;
+    this.pageWidth = window.innerWidth;
+    this.saveDataCallback = saveDataCallback;
+
+    scale = 1.5;
 
     const container = d3.select(selector);
     const dataBounds = this.getDataBounds(nodeData);
@@ -17,19 +21,19 @@ class NodeGraph{
       .attr('height',this.pageHeight - 150)
       .attr('width', this.pageWidth);
 
-    this.svg = svg
+    this.svg = svg;
 
-    const offset = (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2);
+    offset = (this.pageWidth/2) - ((dataBounds.max.X - dataBounds.min.X)/2);
 
     const lines = svg.selectAll('.lines').data(linksArray);
     const newLines = lines.enter();
 
     newLines.append('line')
       .classed('line', true)
-      .attr('x1', (data)=>(nodeData[data.start].X*this.scale + offset))
-      .attr('y1', (data)=>(nodeData[data.start].Y*this.scale))
-      .attr('x2', (data)=>(nodeData[data.end].X*this.scale + offset))
-      .attr('y2', (data)=>(nodeData[data.end].Y*this.scale))
+      .attr('x1', (data)=>(nodeData[data.start].X*scale + offset))
+      .attr('y1', (data)=>(nodeData[data.start].Y*scale))
+      .attr('x2', (data)=>(nodeData[data.end].X*scale + offset))
+      .attr('y2', (data)=>(nodeData[data.end].Y*scale))
 
     
     const nodes = svg.selectAll('.node').data(nodeData);
@@ -45,14 +49,14 @@ class NodeGraph{
       .classed('start', (data, i)=>(i==0))
       .classed('end', (data, i)=>(i == nodeData.length - 1))
       .attr('index',(d, index)=>{index})
-      .attr('cx',(data)=>(data.X*this.scale + offset))
-      .attr('cy',(data)=>(data.Y*this.scale))
+      .attr('cx',(data)=>(data.X*scale + offset))
+      .attr('cy',(data)=>(data.Y*scale))
       .attr('r', 7)
       .attr('id',(data, i)=>('node_'+i))
       .call(d3.drag()
         .on("start", this.dragstarted)
         .on("drag", this.dragged)
-        .on("end", this.draggedEnded));
+        .on("end", this.draggedEnded.bind(this)));
 
     const lable3 = svg.select('.lable3').datum(nodeData[0]).enter();
     const lable5 = svg.select('.lable5').datum(nodeData[nodeData.length - 1]).enter();
@@ -61,20 +65,18 @@ class NodeGraph{
       .datum(nodeData[0])
       .classed('lable3',true)
       .text('3')
-      .attr('x', (d)=>(d.X*this.scale + offset - 4))
-      .attr('y', (d)=>(d.Y*this.scale + 5))
+      .attr('x', (d)=>(d.X*scale + offset - 4))
+      .attr('y', (d)=>(d.Y*scale + 5))
       .style('pointer-events','none')
 
     svg.append('text')
       .datum(nodeData[nodeData.length - 1])
       .classed('lable5',true)
       .text('5')
-      .attr('x', (d)=>(d.X*this.scale + offset - 4))
-      .attr('y', (d)=>(d.Y*this.scale + 5))
+      .attr('x', (d)=>(d.X*scale + offset - 4))
+      .attr('y', (d)=>(d.Y*scale + 5))
       .style('pointer-events','none')
 
-
-   
     this.changeNodeFill = this.changeNodeFill.bind(this);
     this.setNodeDefaultFills = this.setNodeDefaultFills.bind(this);
     this.changeConnectorStroke = this.changeConnectorStroke.bind(this);
@@ -83,11 +85,11 @@ class NodeGraph{
     this.changeConnectorStroke('white',2);
   }
 
-  dragStarted(d){}
-
   dragged(d){
     const nodeVal = parseInt(d3.select(this).attr('id').substring(5));
-    d3.select(this).attr("cx", d.X = d3.event.x).attr("cy", d.Y = d3.event.y);
+    d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+    d.X = (d3.event.x-offset)/scale;
+    d.Y = d3.event.y/scale;
     d3.selectAll('.line')
       .filter((data)=>(data.start===nodeVal))
       .attr('x1',d3.event.x)
@@ -109,9 +111,10 @@ class NodeGraph{
         .attr('y', d3.event.y+5)
     }
   }
-  draggedEnded(d){
-  }
 
+  draggedEnded(){
+    this.saveDataCallback(this.nodeData);
+  }
 
   setNodeDefaultFills(){
     this.changeNodeFill('base_a', '#4357AD');

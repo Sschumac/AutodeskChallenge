@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.get('/newSession', room.createNewRoom);
 router.get('/roomStatus', room.getRoomStatus);
-
+router.post('/updateData', room.updateRoomData);
 
 module.exports = router;
