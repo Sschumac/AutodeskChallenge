@@ -15,7 +15,10 @@ module.exports.createNewRoom = function(req, res){
     isProcessed:false
   }
   vienna.generatePlot(roomID, roomTemplate.sequence, roomTemplate.dbn, (data)=>{
-    roomTemplate.plotData = JSON.parse(data).data;
+    const parsedData = JSON.parse(data);
+    console.log(parsedData);
+    roomTemplate.plotData = parsedData.graphPoints;
+    roomTemplate.ptable = parsedData.ptable;
     roomStore[roomID] = roomTemplate;
     res.send(roomID);
   })

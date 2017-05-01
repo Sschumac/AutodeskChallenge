@@ -44,13 +44,13 @@ class Main extends Component {
   }
 
   setUpInteractivity(){
-    const graph = new NodeGraph('#visuContainer',this.state.roomData.plotData, this.state.roomData.dbn);
+    const graph = new NodeGraph('#graphContainer',this.state.roomData.plotData, this.state.roomData.dbn);
   }
 
   render() {
     return (
       <div className={styles.base}>
-        <svg id='visuContainer' height='500' width='500'></svg>
+        <div id='graphContainer'></div>
         <input value={this.state.sequence}></input>
         <input value={this.state.dbn}></input>
       </div>
